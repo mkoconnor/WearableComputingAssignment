@@ -32,4 +32,4 @@ library(plyr)
 overall.means <- ddply(measurements.on.means.and.stdevs,"Activity",
                        function(df) as.data.frame(lapply(df,mean)))
 
-write.table("tidy.txt",row.name=FALSE)
+write.table(overall.means,file="tidy.txt",row.name=FALSE)
