@@ -25,11 +25,16 @@ test.set <- cbind(test.set,test.set.activities)
 
 total.set <- rbind(training.set,test.set)
 
-measurements.on.means.and.stdevs <- total.set[grepl("(mean|std)\\(\\)",features$Feature),]
+measurements.on.means.and.stdevs <- total.set[,grepl("(mean|std)\\(\\)",features$Feature)]
+
+measurements.on.means.and.stdevs <- cbind(measurements.on.means.and.stdevs,total.set$Activity)
 
 library(plyr)
 
 overall.means <- ddply(measurements.on.means.and.stdevs,"Activity",
-                       function(df) as.data.frame(lapply(df,mean)))
+                       function(df)
+                       as.data.frame(lapply(df,
+                                            function(l)
+                                            if (class(l) == "numeric") { mean(l) } else { l[0] })))
 
 write.table(overall.means,file="tidy.txt",row.name=FALSE)
