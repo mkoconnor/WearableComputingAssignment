@@ -1,7 +1,7 @@
 path.to.dataset.dir <- "~/Downloads/UCI HAR Dataset"
 
 read <- function(file,...) {
-  read.table(file.path(path.to.dataset.dir,file),...)
+  read.table(file.path(path.to.dataset.dir,file),check.names=FALSE,...)
 }
 
 features <- read("features.txt",col.names=c("Id","Feature"),colClasses=c("integer","character"))
@@ -25,9 +25,8 @@ test.set <- cbind(test.set,test.set.activities)
 
 total.set <- rbind(training.set,test.set)
 
+## it will keep activity since it's in the last column and not mentioned by the vector
 measurements.on.means.and.stdevs <- total.set[,grepl("(mean|std)\\(\\)",features$Feature)]
-
-measurements.on.means.and.stdevs <- cbind(measurements.on.means.and.stdevs,total.set$Activity)
 
 library(plyr)
 
@@ -35,6 +34,7 @@ overall.means <- ddply(measurements.on.means.and.stdevs,"Activity",
                        function(df)
                        as.data.frame(lapply(df,
                                             function(l)
-                                            if (class(l) == "numeric") { mean(l) } else { l[0] })))
+                                            if (class(l) == "numeric") { mean(l) } else { l[1] })))
+names(overall.means) <- names(measurements.on.means.and.stdevs)
 
 write.table(overall.means,file="tidy.txt",row.name=FALSE)
