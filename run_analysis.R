@@ -17,12 +17,19 @@ training.set <- cbind(training.set,training.set.activities)
 
 test.set <- read("test/X_test.txt",col.names=features$Feature,colClasses=rep("numeric",nrow(features)))
 
-testing.set.activities <- read("test/y_test.txt",col.names="Activity",colClasses="integer")
-testing.set.activities$Activity <- as.factor(testing.set.activities$Activity)
-levels(testing.set.activities$Activity) <- sapply(levels(testing.set.activities$Activity),function(activity.id) activity.labels[activity.labels$Id == as.integer(activity.id),]$Activity)
+test.set.activities <- read("test/y_test.txt",col.names="Activity",colClasses="integer")
+test.set.activities$Activity <- as.factor(test.set.activities$Activity)
+levels(test.set.activities$Activity) <- sapply(levels(test.set.activities$Activity),function(activity.id) activity.labels[activity.labels$Id == as.integer(activity.id),]$Activity)
 
-test.set <- cbind(training.set,training.set.activities)
+test.set <- cbind(test.set,test.set.activities)
 
 total.set <- rbind(training.set,test.set)
 
-means.and.stdevs <- total.set[grepl("(mean|std)\\(\\)",features$Feature),]
+measurements.on.means.and.stdevs <- total.set[grepl("(mean|std)\\(\\)",features$Feature),]
+
+library(plyr)
+
+overall.means <- ddply(measurements.on.means.and.stdevs,"Activity",
+                       function(df) as.data.frame(lapply(df,mean)))
+
+write.table("tidy.txt",row.name=FALSE)
