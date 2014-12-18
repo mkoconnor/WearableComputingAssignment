@@ -16,7 +16,7 @@ files.  Since we have to read in several files, I first define a
 dataset, and to pass `check.names=FALSE` (this is because otherwise
 `R` will replace characters like `$` in the row names with `.`s).
 
-    path.to.dataset.dir <- "~/Downloads/UCI HAR Dataset"
+    path.to.dataset.dir <- "."
     
     read <- function(file,...) {
       read.table(file.path(path.to.dataset.dir,file),check.names=FALSE,...)
