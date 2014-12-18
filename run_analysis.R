@@ -1,4 +1,9 @@
-path.to.dataset.dir <- "~/Downloads/UCI HAR Dataset"
+## My dataset was downloaded in ~/Downloads, but the instructions say
+## that the code should work if you've downloaded the dataset to your
+## current directory.
+
+## path.to.dataset.dir <- "~/Downloads/UCI HAR Dataset"
+path.to.dataset.dir <- "."
 
 read <- function(file,...) {
   read.table(file.path(path.to.dataset.dir,file),check.names=FALSE,...)
